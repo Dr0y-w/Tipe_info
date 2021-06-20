@@ -54,6 +54,7 @@ def separation_en_taille(s,taille):#segment = [p1,p2]
         if not(distance(p1,p)>distance(p1,p2)):
             points.append(p)
     return points
+
 def separation_en_taille_demo(s,taille):#segment = [p1,p2]
     p1,p2 = s
     d = distance(p1,p2)
@@ -129,6 +130,22 @@ def vitesse_unidimensionel(v1,v2,m1,m2):#une seule dimension
 def vitesse_bidimensionel(v1,v2,m1,m2): #2 dimension
     r1 = vitesse_unidimensionel(v1[0],v2[0],m1,m2)
     r2 = vitesse_unidimensionel(v1[1],v2[1],m1,m2)
+    v1_a_x = fabs(r1[0])
+    v1_a_y = fabs(r2[0])
+    v2_a_x = fabs(r1[1])
+    v2_a_y = fabs(r2[1])
+    return [v1_a_x,v1_a_y],[v2_a_x,v2_a_y]
+
+def vitesse_unidimensionel_demo(v1,v2,m1,m2):#une seule dimension
+    """v1_a = ((m1-m2)/(m1+m2))*v1 + 2*v2*m2/(m1+m2)
+    v2_a = ((2*m1)/(m1+m2))*v1 + ((m2-m1)/(m1+m2))*v2"""
+    v1_a = v1*m2/(m1+m2)
+    v2_a = v2*m1/(m1+m2)
+    return v1_a,v2_a
+
+def vitesse_bidimensionel_demo(v1,v2,m1,m2): #2 dimension
+    r1 = vitesse_unidimensionel_demo(v1[0],v2[0],m1,m2)
+    r2 = vitesse_unidimensionel_demo(v1[1],v2[1],m1,m2)
     v1_a_x = fabs(r1[0])
     v1_a_y = fabs(r2[0])
     v2_a_x = fabs(r1[1])
