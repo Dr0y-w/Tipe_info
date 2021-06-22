@@ -93,12 +93,13 @@ class Space:
                 v1_f=multiplication_2d(liste_vitesse[1],v1_f)
                 v2_f=multiplication_2d(liste_vitesse[2],v1_f)
                 """
+                """
                 resultat = vitesse_bidimensionel_demo(ball1.vitesse,ball2.vitesse,ball1.masse,ball2.masse)
                 v1_f = unitaire(v1_f)
                 v2_f = unitaire(v2_f)
                 v1_f = [v1_f[0]*resultat[0][0],v1_f[1]*resultat[0][1]]
                 v2_f = [v2_f[0]*resultat[1][0],v2_f[1]*resultat[1][1]]
-
+                """
                 #on affecte les changement
                 ball1.vitesse = v1_f
                 ball2.vitesse = v2_f

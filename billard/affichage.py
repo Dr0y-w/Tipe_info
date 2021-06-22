@@ -7,9 +7,8 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-import pyqtgraph as pg
+import pyqtgraph as pg #module permettant d'afficher les graphs
 
-# importation du module contenant la class générée par Qtdesigner
 from ui import Ui_Dialog
 
 from module import *
@@ -18,22 +17,22 @@ from module_math import *
 class mainWindow(QDialog):
     def __init__(self):
         super().__init__()
-        self.angle = 0  # utilisé pour tourner la camera
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.openGLWidget = self.ui.openGLWidget  # raccourci
 
+        #initialisation des graphs
         self.ui.graphicsView.setLabel("left", "EC", color='red')  # définit le titre de l'axe y
         self.ui.graphicsView.setLabel("bottom", "temps(s)")  # définit le titre de l'axe x
         self.ui.graphicsView.setBackground((0, 0, 0))  # couleur en rgb du background
         self.pen = pg.mkPen(color=(255, 0, 0), width=3)  # choix du pen définissant les caractéristique du trait
 
         self.i = 0
-        #objet et space
+        #balle
         self.b1 = Ball([0,0],1,10,(255,0,0),[0.1,0.1],2)
         self.b2 = Ball([-2,-2],1,10,(0,255,0),[0.3,-0.3],1)
         self.b3 = Ball([2,2],1,10,(0,0,255),[-0.2,0.3],1)
-        #wall
+        #mur
         self.w1 = Wall([-20,-10],[-20,10])
         self.w2 = Wall([-20,10],[-7,15])
         self.w3 = Wall([-7,15],[8,25])
@@ -42,12 +41,12 @@ class mainWindow(QDialog):
         self.w6 = Wall([12,-24],[-24,-19])
         self.w7 = Wall([-24,-19],[-20,-10])
 
-
+        #space
         self.s = Space([self.b1,self.b2,self.b3],[self.w1,self.w2,self.w3,self.w4,self.w5,self.w6,self.w7])
 
+        #courbe pour les graphs
         self.energie_cinetique = [[energie_cinetique(ball)] for ball in self.s.balls]
         self.temps = [0]
-#j'aime max3nce
 
     def setupUI(self):  # initialisation de la vue et création du timer
         self.openGLWidget.initializeGL() # appelé au premier affichage uniquement
@@ -57,7 +56,6 @@ class mainWindow(QDialog):
         timer = QTimer(self)  # Le timer
         timer.timeout.connect(self.openGLWidget.update)  # appelle la fonction en argument (sans parenthèse )
         #timer.timeout.connect(self.graph)
-        #ici update appelle la fonction resizeGL et paintGL
         timer.start(10)  # lance le timer pour un temps de 10 ms entre chaque timeout
 
     def paintGL(self):  # réécriture de la fonction de base pour afficher la scène                # appelé a chaque 'update' lancé par le timer
@@ -65,7 +63,7 @@ class mainWindow(QDialog):
         glClearColor(0, 0, 0, 1)  # définition de la couleur du font,le dernier nombre est l'alpha/la transparence
         self.s.collision()
 
-                #affichage des disques
+        #affichage des disques
         for i  in range(len(self.s.balls)):
             self.energie_cinetique[i].append(10*energie_cinetique((self.s.balls[i])))
             glBegin(GL_POLYGON) # début de l'affichage des polygones
@@ -73,7 +71,8 @@ class mainWindow(QDialog):
             for point in self.s.balls[i].point:
                 glVertex2f(*point)
             glEnd() # fin de l'affichage des polygones
-        #affichage des walls
+
+        #affichage des murs
         for wall in self.s.walls:
             glBegin(GL_LINES)
             glColor((255,255,255))
@@ -81,6 +80,7 @@ class mainWindow(QDialog):
             glVertex2f(*wall.p2)
             glEnd()
 
+        #option de projection et de camera
         glMatrixMode(GL_PROJECTION)  # charge la matrice de projection
         """ on change ici les options de la projection sur l'écran """
         glLoadIdentity()  # charge une matrice identité
@@ -101,6 +101,7 @@ class mainWindow(QDialog):
 
     def clear(self):
         self.ui.graphicsView.clear()
+
     def graph(self):
         self.i += 0.1
         self.ui.graphicsView.setXRange(1, 4+self.i)
@@ -109,6 +110,7 @@ class mainWindow(QDialog):
         self.clear()
         for i in range(len(self.energie_cinetique)):
             self.ui.graphicsView.plot(self.temps,self.energie_cinetique[i],pen = self.pen)
+
 app = QApplication(sys.argv)
 window = mainWindow()
 window.setupUI() # on initialize le Qwidget et le QOpenGLwidget

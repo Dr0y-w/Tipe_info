@@ -2,12 +2,12 @@ from math import sin, cos , pi , fabs
 from module_math import *
 
 
-class Wall:
+class Wall:                     #objet mur
     def __init__(self,p1,p2):
         self.p1 = p1
         self.p2 = p2
 
-class Ball:
+class Ball:                     #objet boule
     def __init__(self,centre,rayon,precision,couleur,vitesse,masse):
         self.vitesse = vitesse #2D
         self.masse = masse
@@ -34,6 +34,7 @@ class Space:
     def __init__(self,balls,walls):
         self.balls = balls#liste
         self.walls = walls#liste
+
     def collision(self):
         for i in range(len(self.balls)):
             ball = self.balls[i]
@@ -62,6 +63,7 @@ class Space:
                 ball.vitesse = vecteur_incident(v1,p,p1)
                 self.balls[i].centre = addition_2d(ball.centre,ball.vitesse)
                 ball.refresh()
+                
             elif collision_b:
                 #gen les deux nouveaux vecteurs des balls
                 #on commence par trouvé le point de collision :

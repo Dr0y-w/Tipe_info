@@ -93,14 +93,6 @@ def projette_orthogonale(u,b,a):#projete orthogonal de a sur la droite de vecteu
 def vecteur_incident(v1,p,p1):#v1 = vitesse init, p = point d'intersection, p1 un point du wall droite
     b = addition_2d(p,[-v1[0],-v1[1]])
     u = get_vecteur(p,p1)
-    """if norme(u) != 0:
-        h = projette_orthogonale(u,p,b)
-        ph = get_vecteur(p,h)
-        add = multiplication_2d(-2,ph)
-        c1 = addition_2d(b,add)
-        return get_vecteur(p,c1)
-    else :
-        return [0.000001,0.0000001]"""
     h = projette_orthogonale(u,p,b)
     ph = get_vecteur(p,h)
     add = multiplication_2d(-2,ph)
@@ -139,8 +131,8 @@ def vitesse_bidimensionel(v1,v2,m1,m2): #2 dimension
 def vitesse_unidimensionel_demo(v1,v2,m1,m2):#une seule dimension
     """v1_a = ((m1-m2)/(m1+m2))*v1 + 2*v2*m2/(m1+m2)
     v2_a = ((2*m1)/(m1+m2))*v1 + ((m2-m1)/(m1+m2))*v2"""
-    v1_a = v1*m2/(m1+m2)
-    v2_a = v2*m1/(m1+m2)
+    v1_a = m2/(m1+m2)
+    v2_a = m1/(m1+m2)
     return v1_a,v2_a
 
 def vitesse_bidimensionel_demo(v1,v2,m1,m2): #2 dimension

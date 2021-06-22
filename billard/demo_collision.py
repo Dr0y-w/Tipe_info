@@ -30,9 +30,9 @@ class mainWindow(QDialog):
 
         self.i = 0
         #objet et space
-        self.b1 = Ball([-10,0],1,10,(255,0,0),[0.05,0],1)
-        self.b2 = Ball([10,0],1,10,(0,255,0),[-0.05,0],1)
-
+        self.b1 = Ball([-10,-10],1,10,(255,0,0),[0.05,0.03],1)
+        self.b2 = Ball([10,10],1,10,(0,255,0),[-0.05,-0.07],1)
+        self.p1,self.p2 = "not yet","not yet"
         #wall
 
 
@@ -41,6 +41,7 @@ class mainWindow(QDialog):
 
         self.energie_cinetique = [[energie_cinetique(ball)] for ball in self.s.balls]
         self.temps = [0]
+        self.etat = False
 #j'aime max3nce
 
     def setupUI(self):  # initialisation de la vue et création du timer
@@ -48,11 +49,11 @@ class mainWindow(QDialog):
         self.openGLWidget.resizeGL(800, 800)
         self.openGLWidget.paintGL = self.paintGL # raccourci
 
-        timer = QTimer(self)  # Le timer
-        timer.timeout.connect(self.openGLWidget.update)  # appelle la fonction en argument (sans parenthèse )
+        self.timer = QTimer(self)  # Le timer
+        self.timer.timeout.connect(self.openGLWidget.update)  # appelle la fonction en argument (sans parenthèse )
         #timer.timeout.connect(self.graph)
         #ici update appelle la fonction resizeGL et paintGL
-        timer.start(10)  # lance le timer pour un temps de 10 ms entre chaque timeout
+        self.timer.start(10)  # lance le timer pour un temps de 10 ms entre chaque timeout
 
     def paintGL(self):  # réécriture de la fonction de base pour afficher la scène                # appelé a chaque 'update' lancé par le timer
         glClear(GL_COLOR_BUFFER_BIT)
@@ -74,12 +75,30 @@ class mainWindow(QDialog):
             glVertex2f(*wall.p1)
             glVertex2f(*wall.p2)
             glEnd()
+
         for ball in self.s.balls:
             glBegin(GL_LINES)
             glColor((255,255,255))
-            glVertex2f(*ball.centre)
-            glVertex2f(*multiplication_2d(10,addition_2d(ball.centre,ball.vitesse)))
+            glVertex2fv(ball.centre)
+            glVertex2fv(addition_2d(ball.centre,multiplication_2d(50,ball.vitesse)))
             glEnd()
+
+        if distance(self.s.balls[0].centre,self.s.balls[1].centre)<self.s.balls[1].rayon+self.s.balls[0].rayon and not(self.etat):
+            self.etat = True
+            print("test")
+            n = normale(get_vecteur(self.s.balls[0].centre,self.s.balls[1].centre))
+            self.c = multiplication_2d(0.5,(addition_2d(unitaire(get_vecteur(self.s.balls[0].centre,self.s.balls[1].centre)),self.s.balls[0].centre)))
+            self.p1 = addition_2d(multiplication_2d(10,n),c)
+            self.p2 = addition_2d(c,multiplication_2d(-10,n))
+
+        if self.etat:
+            glBegin(GL_LINES)
+            glColor((255,0,0))
+            print(self.p1,self.p2)
+            glVertex2fv(self.p1)
+            glVertex2fv(self.p2)
+
+
         glMatrixMode(GL_PROJECTION)  # charge la matrice de projection
         """ on change ici les options de la projection sur l'écran """
         glLoadIdentity()  # charge une matrice identité
